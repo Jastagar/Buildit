@@ -1,3 +1,6 @@
+if(process.env.NODE_ENV === 'production'){
+    require("dotenv").parse()
+}
 const express = require("express")
 const bodyParser = require("body-parser")
 const indexRouter = require("./router/index.js")
@@ -20,8 +23,8 @@ app.use("/", indexRouter)
 app.use(bodyParser.urlencoded({extended:true}))
 const mongoose = require('mongoose');
 
-const db = "mongodb+srv://Jastagar:jastagarbrarmks123@cluster0.vishy.mongodb.net/users?retryWrites=true&w=majority"
-
+const db = process.env.DATABASE_URL
+console.log(db)
 mongoose.connect(db).then(()=>{
     console.log("Connection Successful")
 }).catch(err =>{console.log(err)})
@@ -51,7 +54,7 @@ app.post("/", (req,res)=>{
     })
 
     newUser.save()
-    res.render("about")
+    res.render("about", {title:"About"})
     console.log(newUser)
 })
 
