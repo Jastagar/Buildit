@@ -1,50 +1,62 @@
 const express = require("express")
-const {MongoClient} = require("mongodb")
+const bodyParser = require("body-parser")
+const indexRouter = require("./router/index.js")
+const expressLayouts = require("express-ejs-layouts")
 const app = express()
 const port = 3000;
-const bodyParser = require("body-parser")
-
-
-// MongoDB
-async function main() {
-	const uri = "mongodb+srv://Jastagar:jastagarbrarmks123@cluster0.vishy.mongodb.net/test"
-    const client = new MongoClient(uri);
-    await client.connect();
-
-    try {
-        await client.connect();
-    
-        await listDatabases(client);
-     
-    } catch (e) {
-        console.error(e);
-    }
-    finally {
-        await client.close();
-    }
-}
-main().catch(console.error);
-
-async function listDatabases(client){
-    databasesList = await client.db().admin().listDatabases();
- 
-    console.log("Databases:");
-    databasesList.databases.forEach(db => console.log(` - ${db.name}`));
-};
-
-app.use(express.static("public"))
 
 app.set("view engine", "ejs")
+app.set("views", __dirname+"/views")
+app.set("layout", "layouts/layout")
+app.set("router")
 
-app.get("/", function(req,res){
-    res.render("index", {data: "This is the data from the backend"});
+
+app.use(expressLayouts)
+app.use(express.static("public"))
+app.use("/", indexRouter)
+
+
+
+app.use(bodyParser.urlencoded({extended:true}))
+const mongoose = require('mongoose');
+
+const db = "mongodb+srv://Jastagar:jastagarbrarmks123@cluster0.vishy.mongodb.net/users?retryWrites=true&w=majority"
+
+mongoose.connect(db).then(()=>{
+    console.log("Connection Successful")
+}).catch(err =>{console.log(err)})
+
+
+const UserSchema = new mongoose.Schema({
+    name: String,
+    userEmail: String,
+    password:String,
+}) 
+const Users = mongoose.model("Users", UserSchema)
+
+// Users.find((err, result)=>{
+//     console.log(result)
+// })
+
+
+app.post("/", (req,res)=>{
+    var name = req.body.name
+    var password = req.body.password
+    var userEmail = req.body.email
+    var semester = req.body.semester
+
+    const newUser = new Users({
+        userEmail: userEmail,
+        password:password,
+        name:name,
+        semester:semester
+    })
+
+    newUser.save()
+    res.send("Thank You")
+    console.log(newUser)
 })
-app.get("/:pageName", function(req,res){
-    res.render("about", {pageName: req.params.pageName});
-})
-app.get("*", function(req,res){
-    res.render("404",);
-})
+
 
 app.listen(port, ()=>{
     console.log("Server started at port " + port)

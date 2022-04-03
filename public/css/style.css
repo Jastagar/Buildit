@@ -11,3 +11,21 @@ body{
 .clicked{
     color:red;
 }
+/* ==================Login Style======================= */
+
+.Login-Page{
+    height: 100vh; 
+    background-image: url('https://images.unsplash.com/photo-1483354483454-4cd359948304?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
+    background-repeat: no-repeat; 
+    background-size: cover;
+}
+.Login-Page input{
+    background-color: transparent;
+    border: solid black 1px;
+    margin: 10px 0px;
+}
+.Login-Page input:focus{
+    background-color: transparent;
+}
+
+/* ================================================= */
