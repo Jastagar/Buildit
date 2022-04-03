@@ -1,5 +1,9 @@
 "use strict";
 
+if (process.env.NODE_ENV !== "production") {
+  require('dotenv').config();
+}
+
 var express = require("express");
 
 var bodyParser = require("body-parser");
@@ -9,7 +13,7 @@ var indexRouter = require("./router/index.js");
 var expressLayouts = require("express-ejs-layouts");
 
 var app = express();
-var port = 3000;
+var port = process.env.PORT;
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.set("layout", "layouts/layout");
@@ -23,7 +27,7 @@ app.use(bodyParser.urlencoded({
 
 var mongoose = require('mongoose');
 
-var db = "mongodb+srv://Jastagar:jastagarbrarmks123@cluster0.vishy.mongodb.net/users?retryWrites=true&w=majority";
+var db = process.env.DATABASE_URL;
 mongoose.connect(db).then(function () {
   console.log("Connection Successful");
 })["catch"](function (err) {
