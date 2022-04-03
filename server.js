@@ -1,12 +1,12 @@
-if(process.env.NODE_ENV === 'production'){
-    require("dotenv").parse()
+if(process.env.NODE_ENV !== "production"){
+    require('dotenv').config()
 }
 const express = require("express")
 const bodyParser = require("body-parser")
 const indexRouter = require("./router/index.js")
 const expressLayouts = require("express-ejs-layouts")
 const app = express()
-const port = 3000;
+const port = process.env.PORT;
 
 app.set("view engine", "ejs")
 app.set("views", __dirname+"/views")
@@ -24,7 +24,6 @@ app.use(bodyParser.urlencoded({extended:true}))
 const mongoose = require('mongoose');
 
 const db = process.env.DATABASE_URL
-console.log(db)
 mongoose.connect(db).then(()=>{
     console.log("Connection Successful")
 }).catch(err =>{console.log(err)})
