@@ -42,15 +42,13 @@ app.post("/", function (req, res) {
   var name = req.body.name;
   var password = req.body.password;
   var userEmail = req.body.email;
-  var semester = req.body.semester;
   var newUser = new Users({
     userEmail: userEmail,
     password: password,
-    name: name,
-    semester: semester
+    name: name
   });
   newUser.save();
-  res.send("Thank You");
+  res.render("about");
   console.log(newUser);
 });
 app.listen(port, function () {
