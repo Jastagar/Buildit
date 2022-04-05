@@ -8,6 +8,10 @@ body{
     font-size: 4rem;
 
 }
+
+/* animated button css */
+
+
 .clicked{
     color:red;
 }
