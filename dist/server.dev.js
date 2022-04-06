@@ -1,6 +1,6 @@
 "use strict";
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV != "production") {
   require('dotenv').config();
 }
 
@@ -29,7 +29,7 @@ var mongoose = require('mongoose');
 
 var db = process.env.DATABASE_URL;
 mongoose.connect(db).then(function () {
-  console.log("Connection Successful");
+  console.log("Connection to mongo database is successful");
 })["catch"](function (err) {
   console.log(err);
 });
@@ -42,19 +42,30 @@ var Users = mongoose.model("Users", UserSchema); // Users.find((err, result)=>{
 //     console.log(result)
 // })
 
-app.post("/", function (req, res) {
-  var name = req.body.name;
+app.post("/signIn", function (req, res) {
+  var Fname = req.body.Fname;
+  var Lname = req.body.Lname;
   var password = req.body.password;
+  var confirmPassword = req.body.confirmPassword;
   var userEmail = req.body.email;
-  var newUser = new Users({
-    userEmail: userEmail,
-    password: password,
-    name: name
-  });
-  newUser.save();
-  res.render("about");
-  console.log(newUser);
+  var confirmUserEmail = req.body.confirmEmail;
+  var name = Fname + " " + Lname;
+
+  if (password == confirmPassword && userEmail == confirmUserEmail) {
+    var newUser = new Users({
+      userEmail: userEmail,
+      password: password,
+      name: name
+    });
+    newUser.save();
+    res.render("about", {
+      name: name
+    });
+    console.log(newUser);
+  } else {
+    res.send("Sorry TryAgain with same email and password");
+  }
 });
 app.listen(port, function () {
-  console.log("Server started at port " + port);
+  console.log("Server started at port: " + port);
 });
