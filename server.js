@@ -25,7 +25,7 @@ const mongoose = require('mongoose');
 
 const db = process.env.DATABASE_URL
 mongoose.connect(db).then(()=>{
-    console.log("Connection Successful")
+    console.log("Connection to mongo database is successful")
 }).catch(err =>{console.log(err)})
 
 
@@ -41,23 +41,35 @@ const Users = mongoose.model("Users", UserSchema)
 // })
 
 
-app.post("/", (req,res)=>{
-    var name = req.body.name
+app.post("/signIn", (req,res)=>{
+    var Fname = req.body.Fname
+    var Lname = req.body.Lname
     var password = req.body.password
+    var confirmPassword = req.body.confirmPassword
     var userEmail = req.body.email
+    var confirmUserEmail = req.body.confirmEmail
+    var name = Fname + " " + Lname;
+    
 
-    const newUser = new Users({
-        userEmail: userEmail,
-        password:password,
-        name:name,
-    })
 
-    newUser.save()
-    res.render("about", {title:"About"})
-    console.log(newUser)
+
+    if(password == confirmPassword && userEmail == confirmUserEmail){
+        const newUser = new Users({
+            userEmail: userEmail,
+            password:password,
+            name: name,
+        })
+        newUser.save()
+        res.render("about", {name:name})
+        console.log(newUser)
+    }else{
+        res.send("Sorry TryAgain with same email and password")
+    }
+
+    
 })
 
 
 app.listen(port, ()=>{
-    console.log("Server started at port " + port)
+    console.log("Server started at port: " + port)
 })
